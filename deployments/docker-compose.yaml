@@ -1,0 +1,38 @@
+version: '3'
+
+services:
+
+  grpc-server:
+    container_name: grpc-server
+    image: golang:1.21.6-alpine3.19
+    tty: true
+    ports:
+      - 3000:3000
+    working_dir: /usr/src/app/pkg/server/main
+    # command:
+    #   - sh
+    #   - -c
+    #   - | 
+    #     apk update
+    #     apk add protoc
+    #     go install google.golang.org/protobuf/cmd/protoc-gen-go@latest
+    #     go install google.golang.org/grpc/cmd/protoc-gen-go-grpc@latest
+    #     go mod tidy
+    #     echo "server is running on http://localhost:3000"
+    volumes:
+      - ./../:/usr/src/app
+    environment:
+      SERVICE_URL: "http://localhost:3000"
+
+  grpc-client:
+    container_name: grpc-client
+    image: golang:1.21.6-alpine3.19
+    tty: true
+    ports:
+      - 3001:3001
+    working_dir: /usr/src/app/pkg/client/main
+#    command: /bin/sh -c "apk update && apk add protoc && go install google.golang.org/protobuf/cmd/protoc-gen-go@latest && go install google.golang.org/grpc/cmd/protoc-gen-go-grpc@latest && go mod tidy"
+    volumes:
+      - ./../:/usr/src/app
+    environment:
+      SERVICE_URL: "http://localhost:3001"
